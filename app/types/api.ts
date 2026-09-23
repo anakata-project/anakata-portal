@@ -1,5 +1,6 @@
 export type {
   AcceptPortalInviteInput,
+  PaymentLink,
   PortalAgency,
   PortalAvailabilityRow,
   PortalBooking,
@@ -8,6 +9,7 @@ export type {
   PortalLoginInput,
   PortalMaterial,
   PortalNetRates,
+  PortalPaymentLinkInput,
   PortalRequest,
   PortalRequestCreated,
   PortalRequestInput,

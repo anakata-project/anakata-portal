@@ -14,6 +14,7 @@ const pending = ref(true)
 const errors = ref<Array<string>>([])
 const rows = ref<Array<PortalRequest>>([])
 const meta = ref<RequestsBody['meta'] | null>(null)
+const selected = ref<PortalRequest | null>(null)
 
 async function load(): Promise<void> {
   pending.value = true
@@ -36,6 +37,16 @@ async function load(): Promise<void> {
 function go(next: number): void {
   page.value = next
   void load()
+}
+
+function openRequest(row: PortalRequest): void {
+  selected.value = row
+}
+
+function onDrawer(open: boolean): void {
+  if (!open) {
+    selected.value = null
+  }
 }
 
 void load()
@@ -91,6 +102,13 @@ void load()
             <tr
               v-for="(row, index) in rows"
               :key="`${row.reference ?? 'request'}-${String(index)}`"
+              class="portal-row"
+              role="button"
+              tabindex="0"
+              :aria-label="row.reference ?? t('nav.requests')"
+              :data-request="row.reference ?? ''"
+              @click="openRequest(row)"
+              @keydown.enter.prevent="openRequest(row)"
             >
               <td>{{ row.lead_guest }}</td>
               <td class="bk-ref">
@@ -129,5 +147,45 @@ void load()
         </button>
       </div>
     </template>
+
+    <USlideover
+      :open="selected !== null"
+      :title="selected?.reference ?? t('nav.requests')"
+      @update:open="onDrawer"
+    >
+      <template #body>
+        <div
+          v-if="selected"
+          data-request-drawer
+        >
+          <div class="kv">
+            <span>{{ t('requests.colReference') }}</span>
+            <span class="bk-ref">{{ selected.reference ?? '—' }}</span>
+          </div>
+          <div class="kv">
+            <span>{{ t('requests.colStatus') }}</span>
+            <span>
+              <AnkPill :tone="bookingStatusTone(selected.status)">
+                {{ t(bookingStatusKey(selected.status)) }}
+              </AnkPill>
+            </span>
+          </div>
+          <div class="kv">
+            <span>{{ t('requests.colClient') }}</span>
+            <span>{{ selected.lead_guest }}</span>
+          </div>
+          <div class="kv">
+            <span>{{ t('requests.colNext') }}</span>
+            <span>{{ selected.next }}</span>
+          </div>
+          <PortalPayButton
+            :id="selected.id"
+            :status="selected.status"
+            :payment-state="selected.payment_state"
+            :open-payment-kinds="selected.open_payment_kinds"
+          />
+        </div>
+      </template>
+    </USlideover>
   </div>
 </template>

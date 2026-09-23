@@ -93,6 +93,10 @@
     "PAID": "PAID",
     "CANCELLED": "CANCELLED"
   },
+  "pay": {
+    "deposit": "Pay deposit",
+    "balance": "Pay balance"
+  },
   "bookings": {
     "colReference": "Booking",
     "colClient": "Client",

@@ -51,13 +51,26 @@ function pageBody<T>(rows: Array<T>) {
 }
 
 const booking: PortalBooking = {
+  id: 15,
   reference: 'ANK-2026-0005',
   departure_date: '2026-09-27',
   itinerary: 'WEST',
   status: 'REQUESTED',
   lead_guest: 'Elena Voss',
   net_due: 22610,
-  payment_state: 'Awaiting deposit'
+  payment_state: 'Awaiting deposit',
+  open_payment_kinds: []
+}
+
+const checkout = {
+  id: 9,
+  kind: 'DEPOSIT',
+  amount: 2660,
+  stripe_id: 'cs_test_001',
+  url: 'https://checkout.stripe.com/c/pay/cs_test_001',
+  status: 'OPEN',
+  mode: 'test',
+  created_at: '2026-09-23T12:00:00.000000Z'
 }
 
 const holdSentence = 'This request does not hold a cabin. The team will answer within 16 hours. This request is waiting on the commission-cap decision.'
@@ -111,6 +124,111 @@ describe('bookings page', () => {
     expect(drawer?.textContent).toContain('USD 22,610')
     expect(drawer?.textContent).toContain('Awaiting deposit')
     expect(drawer?.textContent).not.toContain('Guests')
+    expect(drawer?.textContent).not.toContain('Payments')
+    wrapper.unmount()
+  })
+
+  it('starts a deposit checkout from the drawer', async () => {
+    request.mockImplementation(async (url: string) => {
+      if (url.includes('payment-link')) {
+        return checkout
+      }
+
+      return pageBody([booking])
+    })
+
+    const assign = vi.spyOn(window.location, 'assign').mockImplementation(() => {})
+    const wrapper = await mountSuspended(BookingsPage, { route: '/bookings' })
+    await flushPromises()
+    await wrapper.get('[data-booking="ANK-2026-0005"]').trigger('click')
+    await flushPromises()
+
+    const button = document.querySelector<HTMLButtonElement>('[data-pay]')
+    expect(button?.textContent).toContain('Pay deposit')
+    expect(button?.dataset.kind).toBe('DEPOSIT')
+    button?.click()
+    await flushPromises()
+
+    expect(request).toHaveBeenCalledWith('/api/portal/bookings/15/payment-link', {
+      method: 'POST',
+      body: { kind: 'DEPOSIT' }
+    })
+    expect(assign).toHaveBeenCalledWith(checkout.url)
+    assign.mockRestore()
+    wrapper.unmount()
+  })
+
+  it('hides pay when the booking is paid, closed, or already has that link open', async () => {
+    const hidden: Array<PortalBooking> = [
+      { ...booking, reference: 'PAID', payment_state: 'Paid in full' },
+      { ...booking, reference: 'CANCELLED', status: 'CANCELLED' },
+      { ...booking, reference: 'OPEN', open_payment_kinds: ['DEPOSIT'] }
+    ]
+
+    for (const row of hidden) {
+      request.mockResolvedValue(pageBody([row]))
+      const wrapper = await mountSuspended(BookingsPage, { route: '/bookings' })
+      await flushPromises()
+      await wrapper.get(`[data-booking="${row.reference ?? ''}"]`).trigger('click')
+      await flushPromises()
+      expect(document.querySelector('[data-pay]')).toBeNull()
+      wrapper.unmount()
+    }
+  })
+
+  it('starts a balance checkout when the deposit is already received', async () => {
+    const row: PortalBooking = {
+      ...booking,
+      reference: 'BAL',
+      payment_state: 'Deposit received'
+    }
+    request.mockImplementation(async (url: string) => {
+      if (url.includes('payment-link')) {
+        return { ...checkout, kind: 'BALANCE' }
+      }
+
+      return pageBody([row])
+    })
+
+    const assign = vi.spyOn(window.location, 'assign').mockImplementation(() => {})
+    const wrapper = await mountSuspended(BookingsPage, { route: '/bookings' })
+    await flushPromises()
+    await wrapper.get('[data-booking="BAL"]').trigger('click')
+    await flushPromises()
+
+    const button = document.querySelector<HTMLButtonElement>('[data-pay]')
+    expect(button?.textContent).toContain('Pay balance')
+    button?.click()
+    await flushPromises()
+
+    expect(request).toHaveBeenCalledWith('/api/portal/bookings/15/payment-link', {
+      method: 'POST',
+      body: { kind: 'BALANCE' }
+    })
+    assign.mockRestore()
+    wrapper.unmount()
+  })
+
+  it('shows the server refusal in the drawer', async () => {
+    request.mockImplementation(async (url: string) => {
+      if (url.includes('payment-link')) {
+        throw new ApiError(422, 'The given data was invalid.', {
+          kind: ['An open Deposit link already exists — cancel it first.']
+        })
+      }
+
+      return pageBody([booking])
+    })
+
+    const wrapper = await mountSuspended(BookingsPage, { route: '/bookings' })
+    await flushPromises()
+    await wrapper.get('[data-booking="ANK-2026-0005"]').trigger('click')
+    await flushPromises()
+    document.querySelector<HTMLButtonElement>('[data-pay]')?.click()
+    await flushPromises()
+
+    expect(document.querySelector('[data-pay-error]')?.textContent).toContain('An open Deposit link already exists — cancel it first.')
+    wrapper.unmount()
   })
 })
 
@@ -153,10 +271,13 @@ describe('requests page', () => {
 
   it('renders the next step in the API\'s words', async () => {
     const row: PortalRequest = {
+      id: 16,
       reference: 'REQ-2026-0004',
       status: 'REQUESTED',
       lead_guest: 'Elena Voss',
-      next: 'This request does not hold a cabin. The team will answer within 16 hours.'
+      next: 'This request does not hold a cabin. The team will answer within 16 hours.',
+      payment_state: 'Awaiting deposit',
+      open_payment_kinds: []
     }
     request.mockResolvedValue(pageBody([row]))
 
@@ -166,6 +287,45 @@ describe('requests page', () => {
     expect(wrapper.get('[data-field="next"]').text()).toBe(row.next)
     expect(wrapper.text()).toContain('REQ-2026-0004')
     expect(wrapper.text()).toContain('Elena Voss')
+  })
+
+  it('starts a deposit checkout from the request drawer', async () => {
+    const row: PortalRequest = {
+      id: 16,
+      reference: 'REQ-2026-0004',
+      status: 'REQUESTED',
+      lead_guest: 'Elena Voss',
+      next: 'This request does not hold a cabin. The team will answer within 16 hours.',
+      payment_state: 'Awaiting deposit',
+      open_payment_kinds: []
+    }
+    request.mockImplementation(async (url: string) => {
+      if (url.includes('payment-link')) {
+        return checkout
+      }
+
+      return pageBody([row])
+    })
+
+    const assign = vi.spyOn(window.location, 'assign').mockImplementation(() => {})
+    const wrapper = await mountSuspended(RequestsPage, { route: '/requests' })
+    await flushPromises()
+    await wrapper.get('[data-request="REQ-2026-0004"]').trigger('click')
+    await flushPromises()
+
+    const drawer = document.querySelector('[data-request-drawer]')
+    expect(drawer?.textContent).toContain('REQ-2026-0004')
+    expect(drawer?.textContent).toContain('Elena Voss')
+    document.querySelector<HTMLButtonElement>('[data-pay]')?.click()
+    await flushPromises()
+
+    expect(request).toHaveBeenCalledWith('/api/portal/bookings/16/payment-link', {
+      method: 'POST',
+      body: { kind: 'DEPOSIT' }
+    })
+    expect(assign).toHaveBeenCalledWith(checkout.url)
+    assign.mockRestore()
+    wrapper.unmount()
   })
 })
 

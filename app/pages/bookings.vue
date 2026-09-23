@@ -196,6 +196,12 @@ void load()
             <span>{{ t('bookings.colNext') }}</span>
             <span>{{ selected.payment_state }}</span>
           </div>
+          <PortalPayButton
+            :id="selected.id"
+            :status="selected.status"
+            :payment-state="selected.payment_state"
+            :open-payment-kinds="selected.open_payment_kinds"
+          />
         </div>
       </template>
     </USlideover>
