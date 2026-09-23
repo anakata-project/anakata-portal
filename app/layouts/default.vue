@@ -1,15 +1,29 @@
 <script setup lang="ts">
 import { NAV } from '../navigation'
 
+const PAGE_TITLES: Record<string, string> = {
+  '/requests/new': 'requests.newTitle'
+}
+
 const { t } = useI18n()
 const route = useRoute()
 const { session, logout } = usePortalSession()
 
 const pageTitle = computed(() => {
+  const mapped = PAGE_TITLES[route.path]
+
+  if (mapped) {
+    return t(mapped)
+  }
+
   const item = NAV.find(entry => entry.to === route.path)
 
   return item ? t(item.labelKey) : t('shell.brand')
 })
+
+function navIsOn(to: string): boolean {
+  return route.path === to || route.path.startsWith(`${to}/`)
+}
 
 useHead(() => ({
   title: pageTitle.value
@@ -29,7 +43,7 @@ useHead(() => ({
           :key="item.to"
           :to="item.to"
           class="portal-link"
-          :class="{ 'is-on': item.to === route.path }"
+          :class="{ 'is-on': navIsOn(item.to) }"
         >
           {{ t(item.labelKey) }}
         </NuxtLink>

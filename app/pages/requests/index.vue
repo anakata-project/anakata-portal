@@ -1,27 +1,26 @@
 <script setup lang="ts">
-import type { operations, PortalCommission } from '../types/api'
-import { portalPageMessages } from '../utils/authError'
-import { listPath } from '../utils/listPath'
-import { commissionStatusKey, commissionStatusTone } from '../utils/portalStatus'
+import type { operations, PortalRequest } from '../../types/api'
+import { portalPageMessages } from '../../utils/authError'
+import { listPath } from '../../utils/listPath'
+import { bookingStatusKey, bookingStatusTone } from '../../utils/portalStatus'
 
-type CommissionsBody = operations['portalCommission.index']['responses'][200]['content']['application/json']
+type RequestsBody = operations['portalRequest.index']['responses'][200]['content']['application/json']
 
 const { t } = useI18n()
 const { request } = useApi()
-const { format } = useDates()
 
 const page = ref(1)
 const pending = ref(true)
 const errors = ref<Array<string>>([])
-const rows = ref<Array<PortalCommission>>([])
-const meta = ref<CommissionsBody['meta'] | null>(null)
+const rows = ref<Array<PortalRequest>>([])
+const meta = ref<RequestsBody['meta'] | null>(null)
 
 async function load(): Promise<void> {
   pending.value = true
   errors.value = []
 
   try {
-    const body = await request(listPath('/api/portal/commissions', page.value)) as CommissionsBody
+    const body = await request(listPath('/api/portal/requests', page.value)) as RequestsBody
 
     rows.value = body.data
     meta.value = body.meta
@@ -39,33 +38,19 @@ function go(next: number): void {
   void load()
 }
 
-function rateLabel(rate: number | null): string {
-  if (rate === null) {
-    return '—'
-  }
-
-  return t('commissions.ratePct', { pct: String(rate) })
-}
-
-function paidLine(row: PortalCommission): string {
-  if (row.payout === null) {
-    return ''
-  }
-
-  const date = format(row.payout.paid_on, 'short')
-
-  if (row.payout.reference) {
-    return t('commissions.paidLine', { date, reference: row.payout.reference })
-  }
-
-  return date
-}
-
 void load()
 </script>
 
 <template>
   <div>
+    <p class="portal-toolbar">
+      <NuxtLink
+        class="mini"
+        to="/requests/new"
+      >
+        {{ t('requests.newLink') }}
+      </NuxtLink>
+    </p>
     <p
       v-if="pending"
       class="bbnote"
@@ -88,11 +73,10 @@ void load()
         <table class="list mini-t">
           <thead>
             <tr>
-              <th>{{ t('commissions.colReference') }}</th>
-              <th>{{ t('commissions.colRate') }}</th>
-              <th>{{ t('commissions.colAmount') }}</th>
-              <th>{{ t('commissions.colPayable') }}</th>
-              <th>{{ t('commissions.colStatus') }}</th>
+              <th>{{ t('requests.colClient') }}</th>
+              <th>{{ t('requests.colReference') }}</th>
+              <th>{{ t('requests.colStatus') }}</th>
+              <th>{{ t('requests.colNext') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -100,36 +84,25 @@ void load()
               v-if="rows.length === 0"
               class="dr-empty"
             >
-              <td colspan="5">
-                {{ t('commissions.empty') }}
+              <td colspan="4">
+                {{ t('requests.empty') }}
               </td>
             </tr>
             <tr
               v-for="(row, index) in rows"
-              :key="`${row.reference ?? 'commission'}-${String(index)}`"
-              :data-commission="row.status"
+              :key="`${row.reference ?? 'request'}-${String(index)}`"
             >
+              <td>{{ row.lead_guest }}</td>
               <td class="bk-ref">
                 {{ row.reference ?? '—' }}
               </td>
-              <td>{{ rateLabel(row.rate) }}</td>
               <td>
-                <AnkMoney :amount="row.commission_amount" />
-              </td>
-              <td>{{ format(row.payable_date, 'short') }}</td>
-              <td>
-                <AnkPill
-                  :tone="commissionStatusTone(row.status)"
-                  :data-status="row.status"
-                >
-                  {{ t(commissionStatusKey(row.status)) }}
+                <AnkPill :tone="bookingStatusTone(row.status)">
+                  {{ t(bookingStatusKey(row.status)) }}
                 </AnkPill>
-                <div
-                  v-if="paidLine(row)"
-                  class="gmeta"
-                >
-                  {{ paidLine(row) }}
-                </div>
+              </td>
+              <td data-field="next">
+                {{ row.next }}
               </td>
             </tr>
           </tbody>

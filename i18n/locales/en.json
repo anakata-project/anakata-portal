@@ -12,6 +12,7 @@
   "nav": {
     "rates": "Rates",
     "availability": "Availability",
+    "requests": "Requests",
     "bookings": "Bookings",
     "commissions": "Commissions",
     "materials": "Materials"
@@ -65,5 +66,78 @@
     "version": "Version",
     "updated": "Updated",
     "download": "Download"
+  },
+  "lists": {
+    "previous": "Previous",
+    "next": "Next",
+    "pager": "Page {page} · {total}"
+  },
+  "bookingStatus": {
+    "REQUESTED": "REQUESTED",
+    "PENDING_PAYMENT": "PENDING PAYMENT",
+    "CONFIRMED": "CONFIRMED",
+    "FULLY_PAID": "FULLY PAID",
+    "ON_BOARD": "ON BOARD",
+    "COMPLETED": "COMPLETED",
+    "OVERDUE": "OVERDUE",
+    "ON_HOLD_AGENCY": "ON HOLD AGENCY",
+    "WAITLISTED": "WAITLISTED",
+    "RELEASED": "RELEASED",
+    "CANCELLED": "CANCELLED",
+    "CANCELLED_POSTPAID": "CANCELLED POSTPAID"
+  },
+  "commissionStatus": {
+    "BLOCKED": "BLOCKED",
+    "EARNED_ON_COMPLETION": "EARNED ON COMPLETION",
+    "PAYABLE": "PAYABLE",
+    "PAID": "PAID",
+    "CANCELLED": "CANCELLED"
+  },
+  "bookings": {
+    "colReference": "Booking",
+    "colClient": "Client",
+    "colDeparture": "Departure",
+    "colItinerary": "Itinerary",
+    "colStatus": "Status",
+    "colNetDue": "Net due",
+    "colNext": "Next",
+    "empty": "No bookings yet."
+  },
+  "commissions": {
+    "colReference": "Booking",
+    "colRate": "Rate",
+    "colAmount": "Commission",
+    "colPayable": "Payable",
+    "colStatus": "Status",
+    "ratePct": "{pct}%",
+    "paidLine": "Paid {date} · {reference}",
+    "empty": "No commissions yet."
+  },
+  "requests": {
+    "newTitle": "Request a booking",
+    "newLink": "Request a booking",
+    "departure": "Departure",
+    "category": "Cabin category",
+    "suite": "Suite",
+    "owner": "Owner's Suite",
+    "cabins": "Cabins",
+    "adults": "Adults",
+    "children": "Children",
+    "addCabin": "Add cabin",
+    "removeCabin": "Remove",
+    "clientName": "Client name",
+    "clientEmail": "Client email",
+    "notes": "Notes",
+    "acknowledge": "The client of record is the end guest.",
+    "submit": "Send request",
+    "emailRequired": "A client email is required.",
+    "acknowledgeRequired": "Confirm that the client of record is the end guest.",
+    "departureRequired": "A departure is required.",
+    "colClient": "Client",
+    "colReference": "Booking",
+    "colStatus": "Status",
+    "colNext": "Next",
+    "empty": "No requests yet.",
+    "backToList": "My requests"
   }
 }

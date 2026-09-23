@@ -316,6 +316,69 @@ tr.dr-empty td {
   margin-bottom: 18px;
 }
 
+.portal-toolbar {
+  margin: 0 0 18px;
+}
+
+.portal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 640px;
+}
+
+.portal-cabins {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.portal-cabin {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.portal-check {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 12.5px;
+  color: var(--ivory);
+}
+
+.portal-check input {
+  margin-top: 3px;
+}
+
+.portal-row {
+  cursor: pointer;
+}
+
+.kv {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--hair);
+  font-size: 12.5px;
+  gap: 14px;
+}
+
+.kv span:first-child {
+  color: var(--iv62);
+}
+
+.kv span:last-child {
+  text-align: right;
+}
+
+.bk-ref {
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: .1em;
+  color: var(--sand);
+}
+
 .field {
   margin: 0;
   min-width: 140px;
@@ -331,7 +394,9 @@ tr.dr-empty td {
   margin-bottom: 6px;
 }
 
-.field input {
+.field input,
+.field select,
+.field textarea {
   width: 100%;
   background: var(--forest-950);
   border: 1px solid var(--hair);
@@ -343,7 +408,13 @@ tr.dr-empty td {
   outline: none;
 }
 
-.field input:focus {
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
   border-color: var(--coral);
 }
 
