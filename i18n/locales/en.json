@@ -1,0 +1,39 @@
+{
+  "theme": {
+    "toLight": "◐ Light",
+    "toDark": "◑ Dark",
+    "toggleAria": "Toggle colour mode"
+  },
+  "shell": {
+    "brand": "Agent portal",
+    "signOut": "Sign out",
+    "signedInAs": "Signed in as"
+  },
+  "nav": {
+    "rates": "Rates",
+    "availability": "Availability",
+    "bookings": "Bookings",
+    "commissions": "Commissions",
+    "materials": "Materials"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "passwordConfirm": "Confirm password",
+    "forgotPassword": "Forgot password?",
+    "forgotTitle": "Forgot password",
+    "sendReset": "Send reset link",
+    "resetTitle": "Reset password",
+    "submitReset": "Reset password",
+    "acceptTitle": "Set your password",
+    "submitAccept": "Set password",
+    "backToSignIn": "Back to sign in",
+    "sessionEnded": "Please sign in again."
+  },
+  "pages": {
+    "placeholder": "This page is not ready yet.",
+    "notFound": "Page not found",
+    "backHome": "Back"
+  }
+}

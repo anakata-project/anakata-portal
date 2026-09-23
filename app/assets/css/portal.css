@@ -1,0 +1,219 @@
+.portal-app {
+  display: flex;
+  min-height: 100vh;
+}
+
+.portal-side {
+  width: 220px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  background: var(--forest);
+  border-right: 1px solid var(--hair);
+  padding: 24px 0;
+}
+
+.portal-brand {
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: .3em;
+  font-size: 15px;
+  padding: 0 22px 22px;
+  border-bottom: 1px solid var(--hair);
+}
+
+.portal-brand img {
+  height: 12px;
+  display: block;
+}
+
+.brand-mark--dark {
+  display: none;
+}
+
+.brand-mark--light {
+  display: block;
+}
+
+.dark .brand-mark--dark {
+  display: block;
+}
+
+.dark .brand-mark--light {
+  display: none;
+}
+
+.portal-brand small {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--iv38);
+  margin-top: 6px;
+}
+
+.portal-nav a {
+  display: block;
+  padding: 10px 22px;
+  color: var(--iv62);
+  text-decoration: none;
+  font-size: 13px;
+  border-left: 2px solid transparent;
+}
+
+.portal-nav a.is-on {
+  color: var(--ivory);
+  border-left-color: var(--coral);
+  background: rgba(232, 86, 70, .07);
+}
+
+.portal-nav a:hover {
+  color: var(--ivory);
+}
+
+.portal-prow {
+  width: 36px;
+  height: 19px;
+  display: block;
+  margin: auto auto 0;
+  padding-top: 28px;
+}
+
+.portal-main {
+  flex: 1;
+  min-width: 0;
+  overflow-x: clip;
+  padding: 28px 34px 80px;
+}
+
+.portal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+  gap: 20px;
+}
+
+.portal-head h1 {
+  margin: 0;
+}
+
+.portal-who {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.portal-agency {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--sand);
+}
+
+.portal-who .mono {
+  color: var(--iv38);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.who-email {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--iv62);
+}
+
+.portal-placeholder {
+  margin: 0;
+  padding: 20px;
+  color: var(--iv62);
+}
+
+.auth-layout {
+  position: relative;
+  min-height: 100vh;
+  background: var(--forest);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.auth-theme {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.auth-column {
+  width: 400px;
+  max-width: 100%;
+}
+
+.auth-column .portal-brand {
+  border-bottom: 0;
+  padding: 0 0 22px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+}
+
+.auth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.auth-link {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ivory);
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  color: var(--coral);
+}
+
+.notice {
+  border: 1px dashed var(--sand);
+  color: var(--sand);
+  padding: 12px 14px;
+  font-size: 12px;
+  margin: 0;
+}
+
+.warnbox {
+  border: 1px solid var(--coral);
+  background: rgba(232, 86, 70, .08);
+  padding: 14px 16px;
+  font-size: 12.5px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.warnbox p {
+  margin: 0;
+}
+
+@media (max-width: 800px) {
+  .portal-side {
+    display: none;
+  }
+}
