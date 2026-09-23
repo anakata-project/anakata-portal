@@ -31,6 +31,20 @@ function throttleMessage(error: unknown): string | null {
   return null
 }
 
+export function portalPageMessages(error: unknown): Array<string> {
+  const lines = portalAuthMessages(error)
+
+  if (lines.length > 0) {
+    return lines
+  }
+
+  if (error instanceof Error && error.message) {
+    return [error.message]
+  }
+
+  return []
+}
+
 export function portalAuthMessages(error: unknown): Array<string> {
   if (error instanceof ApiError) {
     if (error.status === 422) {

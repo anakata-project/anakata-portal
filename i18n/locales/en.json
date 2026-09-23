@@ -35,5 +35,35 @@
     "placeholder": "This page is not ready yet.",
     "notFound": "Page not found",
     "backHome": "Back"
+  },
+  "rates": {
+    "line": "NET RATES (PUBLIC − {pct}%) · PUBLIC PRICES NEVER SHOWN",
+    "netRate": "Net rate",
+    "suitePp": "Suite · per person",
+    "ownerPp": "Owner's Suite · per person",
+    "charterWeek": "Charter · per week",
+    "empty": "No published rates."
+  },
+  "availability": {
+    "from": "From",
+    "to": "To",
+    "yacht": "Yacht",
+    "itinerary": "Itinerary",
+    "apply": "Show",
+    "date": "Date",
+    "label": "Availability",
+    "request": "Request",
+    "empty": "No departures in this range.",
+    "previous": "Previous",
+    "next": "Next",
+    "pager": "Page {page} · {total}"
+  },
+  "materials": {
+    "title": "Title",
+    "kind": "Kind",
+    "size": "Size",
+    "version": "Version",
+    "updated": "Updated",
+    "download": "Download"
   }
 }
