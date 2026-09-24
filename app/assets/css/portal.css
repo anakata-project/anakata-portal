@@ -26,19 +26,15 @@
   display: block;
 }
 
-.brand-mark--dark {
+.portal-brand img.brand-mark--dark {
   display: none;
 }
 
-.brand-mark--light {
+.dark .portal-brand img.brand-mark--dark {
   display: block;
 }
 
-.dark .brand-mark--dark {
-  display: block;
-}
-
-.dark .brand-mark--light {
+.dark .portal-brand img.brand-mark--light {
   display: none;
 }
 
