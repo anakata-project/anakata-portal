@@ -17,6 +17,10 @@ const { request } = useApi()
 const queryId = Number(singleQuery(route.query.departure_id))
 const departureId = ref(Number.isInteger(queryId) && queryId > 0 ? String(queryId) : '')
 const category = ref<Category>('SUITE')
+const categoryItems = computed(() => [
+  { label: t('requests.suite'), value: 'SUITE' as const },
+  { label: t('requests.owner'), value: 'OWNER' as const }
+])
 const cabins = ref<Array<CabinDraft>>([{ adults: 1, children: 0 }])
 const clientName = ref('')
 const clientEmail = ref('')
@@ -161,17 +165,12 @@ async function onSubmit(): Promise<void> {
 
       <div class="field">
         <label for="req-category">{{ t('requests.category') }}</label>
-        <select
+        <USelect
           id="req-category"
           v-model="category"
-        >
-          <option value="SUITE">
-            {{ t('requests.suite') }}
-          </option>
-          <option value="OWNER">
-            {{ t('requests.owner') }}
-          </option>
-        </select>
+          class="w-full"
+          :items="categoryItems"
+        />
       </div>
 
       <div>
